@@ -1,9 +1,47 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@layer base {
+    body {
+        /* Menggunakan font Inter dari CDN */
+        @apply bg-[#faf9f6] text-[#111111] font-sans antialiased selection:bg-[#ff5600] selection:text-white;
+    }
+    
+    h1, h2, h3, h4 {
+        @apply font-normal leading-none tracking-tight text-[#111111]; 
+    }
+    
+    h1 { @apply text-5xl md:text-7xl tracking-[-2.4px]; }
+    h2 { @apply text-4xl md:text-[54px] tracking-[-1.6px]; }
+    h3 { @apply text-2xl md:text-[40px] tracking-[-1.2px]; }
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+@layer components {
+    /* Intercom Buttons Styling */
+    .btn-dark {
+        @apply inline-flex items-center justify-center px-[14px] py-3 bg-[#111111] text-white text-base font-normal rounded-[4px] transition-transform duration-200 hover:bg-white hover:text-[#111111] hover:scale-[1.05] active:scale-[0.85] border border-[#111111];
+    }
+    
+    .btn-outline {
+        @apply inline-flex items-center justify-center px-[14px] py-3 bg-transparent text-[#111111] text-base font-normal rounded-[4px] transition-transform duration-200 border border-[#111111] hover:scale-[1.05] active:scale-[0.85];
+    }
+
+    .btn-accent {
+        @apply inline-flex items-center justify-center px-[14px] py-3 bg-[#ff5600] text-white text-base font-normal rounded-[4px] transition-transform duration-200 hover:scale-[1.05] active:scale-[0.85] border border-[#ff5600];
+    }
+
+    /* Intercom Forms Styling */
+    .form-label {
+        @apply block text-sm font-normal mb-1 text-[#111111];
+    }
+
+    .form-input {
+        @apply w-full bg-white text-[#111111] border border-[#dedbd6] p-3 rounded-[4px] font-sans text-base outline-none focus:ring-0 focus:border-[#111111] transition-colors placeholder:text-[#9c9fa5];
+    }
+
+    /* Intercom Containers & Cards */
+    .card-intercom {
+        @apply bg-white border border-[#dedbd6] rounded-[8px] p-5 shadow-none;
+    }
 }
