@@ -15,9 +15,21 @@ class RoleMiddleware
     {
         $user = $request->user();
 
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $userRole = $user->role instanceof \App\Enums\RolePengguna ? $user->role->value : $user->role;
+
         // Periksa kecocokan role pengguna
-        if (!$user || !in_array($user->role->value, $roles)) {
-            abort(403, 'Akses ditolak.');
+        if (!in_array($userRole, $roles)) {
+            // Jika role tidak cocok, kembalikan ke dashboard masing-masing sesuai role
+            return match ($user->role) {
+                \App\Enums\RolePengguna::Admin => redirect()->route("admin.dashboard"),
+                \App\Enums\RolePengguna::Apoteker => redirect()->route("apoteker.dashboard"),
+                \App\Enums\RolePengguna::Kasir => redirect()->route("kasir.pos"),
+                default => redirect()->route("katalog"),
+            };
         }
 
         // Lanjutkan request jika cocok

@@ -37,6 +37,9 @@
       <td><a href="docs/7_gap_analysis_dan_uat.md">7. Analisis Celah Mendalam & UAT</a></td>
       <td><a href="docs/8_analisis_peran_dan_penggunaan.md">8. Analisis Peran dan Skenario Penggunaan</a></td>
     </tr>
+    <tr>
+      <td colspan="2" align="center"><a href="docs/system_design_document.md"><strong>9. Dokumen Desain Sistem Lengkap (Use Case Diagram, Use Case Descriptions, Class Diagram, dan Sequence Diagram FIFO)</strong></a></td>
+    </tr>
   </table>
 </div>
 
