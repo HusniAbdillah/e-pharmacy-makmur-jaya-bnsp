@@ -105,23 +105,23 @@ Makmur Jaya E-Pharmacy adalah platform e-commerce dan manajemen inventaris apote
     </td>
   </tr>
   <tr>
-    <td width="50%">
+    <td width="50%" style="text-align: center;">
       <img src="public/images/9.png" alt="Manajemen Supplier" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
       <sub>Manajemen Master Supplier (Admin)</sub>
     </td>
-    <td width="50%">
+    <td width="50%" style="text-align: center;">
       <img src="public/images/10.png" alt="Manajemen Transaksi" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
       <sub>Manajemen & Update Status Transaksi (Admin)</sub>
     </td>
   </tr>
   <tr>
-    <td width="50%">
+    <td width="50%" style="text-align: center;">
       <img src="public/images/11.png" alt="Log Aktivitas" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
       <sub>Log Aktivitas & Audit Trail Pengguna</sub>
     </td>
-    <td width="50%">
+    <td width="50%" style="text-align: center;">
       <img src="public/images/12.png" alt="Log Viewer" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Laravel Log Viewer (FIFO & Engine Audit)</sub>
+      <sub>Laravel Log Viewer (Pelacakan Log Sistem & Diagnostik Error)</sub>
     </td>
   </tr>
 </table>
