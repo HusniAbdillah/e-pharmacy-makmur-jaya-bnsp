@@ -34,7 +34,8 @@
       <td><a href="docs/6_analisis_risiko_keamanan.md">6. Analisis Risiko Keamanan Informasi</a></td>
     </tr>
     <tr>
-      <td colspan="2" align="center"><a href="docs/7_gap_analysis_dan_uat.md">7. Analisis Celah Mendalam & Dokumen Pengujian (UAT & Test Cases)</a></td>
+      <td><a href="docs/7_gap_analysis_dan_uat.md">7. Analisis Celah Mendalam & UAT</a></td>
+      <td><a href="docs/8_analisis_peran_dan_penggunaan.md">8. Analisis Peran dan Skenario Penggunaan</a></td>
     </tr>
   </table>
 </div>
