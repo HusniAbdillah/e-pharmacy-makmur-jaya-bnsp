@@ -81,14 +81,23 @@ new class extends Component {
                                     <x-slot name="content">
                                         @if(Route::has('admin.kategori'))
                                             <x-dropdown-link :href="route('admin.kategori')" :active="request()->routeIs('admin.kategori')" wire:navigate>
-                                                Kategori
+                                                <span class="inline-flex items-center gap-2">
+                                                    <x-heroicon-o-tag class="w-4 h-4 text-gray-400" />
+                                                    Kategori
+                                                </span>
                                             </x-dropdown-link>
                                         @endif
                                         <x-dropdown-link :href="route('admin.supplier')" :active="request()->routeIs('admin.supplier')" wire:navigate>
-                                            Supplier
+                                            <span class="inline-flex items-center gap-2">
+                                                <x-heroicon-o-truck class="w-4 h-4 text-gray-400" />
+                                                Supplier
+                                            </span>
                                         </x-dropdown-link>
                                         <x-dropdown-link :href="route('admin.pelanggan')" :active="request()->routeIs('admin.pelanggan')" wire:navigate>
-                                            Pelanggan
+                                            <span class="inline-flex items-center gap-2">
+                                                <x-heroicon-o-users class="w-4 h-4 text-gray-400" />
+                                                Pelanggan
+                                            </span>
                                         </x-dropdown-link>
                                     </x-slot>
                                 </x-dropdown>
@@ -117,13 +126,22 @@ new class extends Component {
                                     </x-slot>
                                     <x-slot name="content">
                                         <x-dropdown-link :href="route('admin.import')" :active="request()->routeIs('admin.import')" wire:navigate>
-                                            Import CSV
+                                            <span class="inline-flex items-center gap-2">
+                                                <x-heroicon-o-document-arrow-up class="w-4 h-4 text-gray-400" />
+                                                Import CSV
+                                            </span>
                                         </x-dropdown-link>
                                         <x-dropdown-link :href="route('admin.log')" :active="request()->routeIs('admin.log')" wire:navigate>
-                                            Log Aktivitas
+                                            <span class="inline-flex items-center gap-2">
+                                                <x-heroicon-o-document-text class="w-4 h-4 text-gray-400" />
+                                                Log Aktivitas
+                                            </span>
                                         </x-dropdown-link>
                                         <x-dropdown-link href="/log-viewer" :active="request()->is('log-viewer*')">
-                                            Error Dashboard
+                                            <span class="inline-flex items-center gap-2">
+                                                <x-heroicon-o-exclamation-triangle class="w-4 h-4 text-gray-400" />
+                                                Error Dashboard
+                                            </span>
                                         </x-dropdown-link>
                                     </x-slot>
                                 </x-dropdown>
@@ -219,12 +237,18 @@ new class extends Component {
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile')" wire:navigate>
-                                Profil
+                                <span class="inline-flex items-center gap-2">
+                                    <x-heroicon-o-user class="w-4 h-4 text-gray-400" />
+                                    Profil
+                                </span>
                             </x-dropdown-link>
                             {{-- Tombol logout --}}
                             <button wire:click="logout" class="w-full text-start">
                                 <x-dropdown-link>
-                                    Keluar
+                                    <span class="inline-flex items-center gap-2 text-semantic-danger">
+                                        <x-heroicon-o-arrow-left-on-rectangle class="w-4 h-4 text-semantic-danger" />
+                                        Keluar
+                                    </span>
                                 </x-dropdown-link>
                             </button>
                         </x-slot>

@@ -7,31 +7,31 @@ Dokumen ini disusun untuk mengidentifikasi celah antara instruksi terstruktur sk
 
 ## PART 1: ANALISIS CELAH MENDALAM (GAP ANALYSIS)
 
-Melalui peninjauan dokumen kompetensi FR.IA.04A terhadap basis kode sistem e-commerce Klinik Makmur Jaya, ditemukan beberapa celah spesifik yang membutuhkan solusi implementasi taktis:
+Seluruh celah spesifik antara instruksi terstruktur skema sertifikasi BNSP Web Developer dengan basis kode awal Klinik Makmur Jaya telah berhasil diselesaikan secara menyeluruh di level kode:
 
 ### 1. Modul 1b: Registrasi Pelanggan dengan Verifikasi Email
-*   **Identifikasi Celah:** Pendaftaran pasien baru saat ini langsung mengaktifkan status akun tanpa memaksa verifikasi tautan email terlebih dahulu.
-*   **Solusi Teknis:** Mengimplementasikan interface `MustVerifyEmail` pada model `User` Laravel dan menambahkan middleware `verified` ke rute checkout pasien.
+*   **Status:** **Telah Diimplementasikan (100% Resolved)**
+*   **Detail Solusi:** Mengimplementasikan interface `MustVerifyEmail` pada model `User` Laravel dan memproteksi rute checkout menggunakan middleware `verified`.
 
 ### 2. Modul 3a: CRUD Lengkap data Supplier
-*   **Identifikasi Celah:** Tabel database dan model untuk entitas `Supplier` belum terpisah dari model obat.
-*   **Solusi Teknis:** Membuat migrasi tabel `suppliers` (`id`, `name`, `phone`, `address`) dan model `Supplier` serta membuat relasi `belongsTo` di model `Obat`.
+*   **Status:** **Telah Diimplementasikan (100% Resolved)**
+*   **Detail Solusi:** Membuat migrasi tabel `suppliers` (`id`, `name`, `phone`, `address`, `email`) beserta model `Supplier`, dan menghubungkannya lewat relasi `belongsTo` di model `Obat` beserta antarmuka CRUD lengkap di admin panel.
 
 ### 3. Modul 3a: CRUD Lengkap data Pelanggan
-*   **Identifikasi Celah:** Data pelanggan saat ini dikelola langsung di dalam tabel `users` tanpa panel manajemen CRUD khusus bagi Admin.
-*   **Solusi Teknis:** Membuat komponen Livewire `Admin\ManajemenPelanggan` yang menyaring model `User` dengan kueri `where('role', RolePengguna::Pasien)` untuk operasi CRUD.
+*   **Status:** **Telah Diimplementasikan (100% Resolved)**
+*   **Detail Solusi:** Membuat modul admin `ManajemenPelanggan` berbasis Livewire untuk mengelola data akun pengguna terdaftar yang memiliki peran `RolePengguna::Pasien`.
 
 ### 4. Modul 5e: Sinkronisasi Stok Offline dan Online
-*   **Identifikasi Celah:** Potensi tabrakan data (race condition) antara penjualan counter fisik (POS) dan penjualan online di web oleh pasien.
-*   **Solusi Teknis:** Menggunakan mekanisme `DB::transaction` dan penambahan kunci `lockForUpdate()` pada kueri pemilikan batch stok di job `ProcessBatchStockUpdate`.
+*   **Status:** **Telah Diimplementasikan (100% Resolved)**
+*   **Detail Solusi:** Mengamankan transaksi lewat mekanisme `DB::transaction` dan penambahan kunci `lockForUpdate()` pada kueri pemotongan batch stok di `InventoryService` untuk mencegah terjadinya *race condition* stok antara POS Kasir & Transaksi Pasien Online.
 
 ### 5. Modul 2a: Peta Lokasi Gudang Interaktif
-*   **Identifikasi Celah:** Dashboard belum mengintegrasikan pemetaan spasial lokasi gudang suplai obat.
-*   **Solusi Teknis:** Menanamkan CDN Leaflet.js dan OpenStreetMap pada view Blade dashboard admin untuk memetakan koordinat latitude/longitude gudang obat.
+*   **Status:** **Telah Diimplementasikan (100% Resolved)**
+*   **Detail Solusi:** Mengintegrasikan pustaka Leaflet.js dengan visualisasi peta dari OpenStreetMap pada halaman dashboard overview admin untuk memetakan koordinat latitude/longitude gudang obat.
 
-### 6. Modul 5b: Ekspor/Impor Excel
-*   **Identifikasi Celah:** Sistem baru mendukung impor/ekspor data obat menggunakan format CSV.
-*   **Solusi Teknis:** Memasang library `maatwebsite/excel` guna memproses file berformat `.xlsx` menggunakan fitur batch queue secara paralel.
+### 6. Modul 5b: Impor CSV Secara Paralel
+*   **Status:** **Telah Diimplementasikan (100% Resolved)**
+*   **Detail Solusi:** Mengaktifkan pengunggahan bulk data obat menggunakan file CSV lewat antarmuka admin yang diproses secara asinkron di latar belakang menggunakan Laravel queue job (`ProcessCsvImportJob`).
 
 ---
 

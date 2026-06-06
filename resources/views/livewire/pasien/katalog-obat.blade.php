@@ -103,16 +103,28 @@
                     </p>
 
                     {{-- Tombol tambah --}}
-                    <button
-                        wire:click="tambahKeKeranjang({{ $obat->id }})"
-                        @if($obat->stok_tersedia <= 0) disabled @endif
-                        class="btn-accent w-full @if($obat->stok_tersedia <= 0) opacity-50 cursor-not-allowed @endif mb-2">
-                        @if($obat->stok_tersedia > 0)
-                            Tambah ke Keranjang
-                        @else
-                            Tidak Tersedia
-                        @endif
-                    </button>
+                    @if(auth()->check() && auth()->user()->role === \App\Enums\RolePengguna::Kasir)
+                        <a href="{{ route('kasir.pos') }}" wire:navigate
+                            class="btn-accent w-full text-center block mb-2 py-2 text-sm font-medium">
+                            Buka POS Konter
+                        </a>
+                    @elseif(auth()->check() && auth()->user()->role !== \App\Enums\RolePengguna::Pasien)
+                        <button disabled
+                            class="btn-accent w-full opacity-50 cursor-not-allowed mb-2 py-2 text-sm font-medium">
+                            Khusus Pasien
+                        </button>
+                    @else
+                        <button
+                            wire:click="tambahKeKeranjang({{ $obat->id }})"
+                            @if($obat->stok_tersedia <= 0) disabled @endif
+                            class="btn-accent w-full @if($obat->stok_tersedia <= 0) opacity-50 cursor-not-allowed @endif mb-2">
+                            @if($obat->stok_tersedia > 0)
+                                Tambah ke Keranjang
+                            @else
+                                Tidak Tersedia
+                            @endif
+                        </button>
+                    @endif
 
                     {{-- Detail button --}}
                     <a href="{{ route('katalog.detail', $obat->id) }}" wire:navigate

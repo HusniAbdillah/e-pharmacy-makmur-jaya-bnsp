@@ -13,6 +13,11 @@ class DetailObat extends Component
 
     public function tambahKeKeranjang(): void
     {
+        if (auth()->check() && auth()->user()->role !== \App\Enums\RolePengguna::Pasien) {
+            session()->flash('error', "Hanya pasien yang dapat berbelanja di keranjang katalog.");
+            return;
+        }
+
         $inventoryService = app(InventoryService::class);
 
         // Cek stok tersedia

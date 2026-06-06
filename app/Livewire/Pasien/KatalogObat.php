@@ -34,6 +34,11 @@ class KatalogObat extends Component
 
     public function tambahKeKeranjang(int $obatId): void
     {
+        if (auth()->check() && auth()->user()->role !== \App\Enums\RolePengguna::Pasien) {
+            session()->flash("error", "Hanya pasien yang dapat berbelanja di keranjang katalog.");
+            return;
+        }
+
         $obat = Obat::findOrFail($obatId);
         $inventoryService = app(InventoryService::class);
 

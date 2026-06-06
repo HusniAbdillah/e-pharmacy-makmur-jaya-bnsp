@@ -91,16 +91,28 @@
                 @endif
 
                 {{-- Tombol tambah keranjang --}}
-                <button
-                    wire:click="tambahKeKeranjang"
-                    @if($obat->stok_tersedia <= 0) disabled @endif
-                    class="btn-accent w-full mt-auto @if($obat->stok_tersedia <= 0) opacity-50 cursor-not-allowed @endif">
-                    @if($obat->stok_tersedia > 0)
-                        Tambah ke Keranjang
-                    @else
-                        Tidak Tersedia
-                    @endif
-                </button>
+                @if(auth()->check() && auth()->user()->role === \App\Enums\RolePengguna::Kasir)
+                    <a href="{{ route('kasir.pos') }}" wire:navigate
+                        class="btn-accent w-full text-center block mt-auto py-2.5 font-medium">
+                        Buka POS Konter
+                    </a>
+                @elseif(auth()->check() && auth()->user()->role !== \App\Enums\RolePengguna::Pasien)
+                    <button disabled
+                        class="btn-accent w-full mt-auto py-2.5 opacity-50 cursor-not-allowed font-medium">
+                        Khusus Pasien
+                    </button>
+                @else
+                    <button
+                        wire:click="tambahKeKeranjang"
+                        @if($obat->stok_tersedia <= 0) disabled @endif
+                        class="btn-accent w-full mt-auto @if($obat->stok_tersedia <= 0) opacity-50 cursor-not-allowed @endif">
+                        @if($obat->stok_tersedia > 0)
+                            Tambah ke Keranjang
+                        @else
+                            Tidak Tersedia
+                        @endif
+                    </button>
+                @endif
             </div>
         </div>
 
