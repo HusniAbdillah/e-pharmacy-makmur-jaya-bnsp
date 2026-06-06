@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout("layouts.guest")] class extends Component {
     public LoginForm $form;
 
     /**
@@ -20,52 +19,115 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(
+            default: route("dashboard", absolute: false),
+            navigate: true,
+        );
     }
-}; ?>
+};
+?>
 
 <div>
-    <!-- Session Status -->
+
+    {{-- Header --}}
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-black tracking-tight">Masuk</h1>
+        <p class="text-sm text-gray-50 mt-1">Selamat datang kembali di Makmur Jaya E-Pharmacy</p>
+    </div>
+
+    {{-- Status sesi (mis: setelah reset password) --}}
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form wire:submit="login">
-        <!-- Email Address -->
+    <form wire:submit="login" class="space-y-4">
+
+        {{-- Alamat Email --}}
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
+            <x-input-label for="email" value="Alamat Email" />
+            <x-text-input wire:model="form.email"
+                          id="email"
+                          type="email"
+                          name="email"
+                          required
+                          autofocus
+                          autocomplete="username"
+                          placeholder="nama@contoh.com" />
+            <x-input-error :messages="$errors->get('form.email')" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
+        {{-- Kata Sandi --}}
+        <div>
+            <x-input-label for="password" value="Kata Sandi" />
+            <x-text-input wire:model="form.password"
+                          id="password"
+                          type="password"
+                          name="password"
+                          required
+                          autocomplete="current-password"
+                          placeholder="Masukkan kata sandi" />
+            <x-input-error :messages="$errors->get('form.password')" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+        {{-- Ingat Saya & Lupa Kata Sandi --}}
+        <div class="flex items-center justify-between pt-1">
+            <label for="remember" class="flex items-center gap-2 cursor-pointer select-none">
+                <input wire:model="form.remember"
+                       id="remember"
+                       type="checkbox"
+                       name="remember"
+                       class="rounded-sm border-oat text-orange focus:ring-orange/30 focus:ring-offset-0">
+                <span class="text-sm text-gray-50">Ingat saya</span>
             </label>
-        </div>
 
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Forgot your password?') }}
+                <a href="{{ route('password.request') }}"
+                   wire:navigate
+                   class="text-sm text-gray-50 hover:text-black hover:underline transition duration-150">
+                    Lupa kata sandi?
                 </a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
         </div>
+
+        {{-- Tombol Masuk --}}
+        <x-primary-button class="w-full mt-2">
+            Masuk
+        </x-primary-button>
+
     </form>
+
+    {{-- Tautan ke Halaman Daftar --}}
+    <p class="mt-5 text-center text-sm text-gray-50">
+        Belum punya akun?
+        <a href="{{ route('register') }}"
+           wire:navigate
+           class="font-medium text-black hover:underline transition duration-150">
+            Daftar sekarang
+        </a>
+    </p>
+
+    {{-- Informasi Kredensial Pengujian --}}
+    <div class="bg-gray-50 border border-gray-200 rounded-sm p-4 mt-6 text-sm text-gray-700">
+        <p class="font-semibold text-black mb-2 flex items-center gap-1.5">
+            <x-heroicon-o-information-circle class="w-4 h-4 text-orange shrink-0" />
+            Informasi Kredensial Pengujian
+        </p>
+        <div class="space-y-1.5 font-mono text-xs">
+            <div class="flex items-center justify-between gap-4">
+                <span class="text-gray-50 shrink-0">Admin:</span>
+                <span class="text-black font-semibold">admin@makmurjaya.id / Admin@123</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+                <span class="text-gray-50 shrink-0">Apoteker:</span>
+                <span class="text-black font-semibold">apoteker@makmurjaya.id / Apoteker@123</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+                <span class="text-gray-50 shrink-0">Kasir:</span>
+                <span class="text-black font-semibold">kasir@makmurjaya.id / Kasir@123</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+                <span class="text-gray-50 shrink-0">Pasien:</span>
+                <span class="text-black font-semibold">pasien@makmurjaya.id / Pasien@123</span>
+            </div>
+        </div>
+    </div>
+
 </div>

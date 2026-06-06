@@ -32,9 +32,12 @@ return new class extends Migration {
                 ->constrained("obats")
                 ->onDelete("restrict");
 
-            // Referensi ke batch spesifik — kritis untuk audit trail FIFO
+            // Referensi ke batch spesifik — nullable agar mendukung pemrosesan FIFO asinkron (via Job).
+            // Nilai ini diisi oleh ProcessBatchStockUpdate setelah kalkulasi FIFO selesai.
+            // TIDAK BOLEH null pada saat transaksi berstatus 'selesai'.
             $table
                 ->foreignId("batch_stok_id")
+                ->nullable()
                 ->constrained("batch_stoks")
                 ->onDelete("restrict");
 

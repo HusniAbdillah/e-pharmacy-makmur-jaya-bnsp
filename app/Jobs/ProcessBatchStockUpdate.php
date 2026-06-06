@@ -64,9 +64,7 @@ class ProcessBatchStockUpdate implements ShouldQueue
      *
      * @param  int $transaksiId ID transaksi yang stoknya akan dipotong
      */
-    public function __construct(
-        public readonly int $transaksiId
-    ) {}
+    public function __construct(public readonly int $transaksiId) {}
 
     /**
      * Jalankan logika utama Job: potong stok untuk setiap item transaksi.
@@ -79,18 +77,21 @@ class ProcessBatchStockUpdate implements ShouldQueue
      */
     public function handle(InventoryService $inventoryService): void
     {
-        Log::info("[JOB] Mulai memproses stok untuk transaksi #{$this->transaksiId}.");
+        Log::info(
+            "[JOB] Mulai memproses stok untuk transaksi #{$this->transaksiId}.",
+        );
 
         // Muat transaksi beserta semua item-nya
-        $transaksi = Transaksi::with(['detailTransaksis.obat'])
-            ->findOrFail($this->transaksiId);
+        $transaksi = Transaksi::with(["detailTransaksis.obat"])->findOrFail(
+            $this->transaksiId,
+        );
 
         // Pastikan transaksi masih dalam status 'menunggu' sebelum diproses.
         // Cegah double-processing jika Job dijalankan lebih dari sekali.
-        if ($transaksi->status !== StatusTransaksi::Menunggu) {
+        if ($transaksi->status !== StatusTransaksi::MenungguPembayaran) {
             Log::warning(
                 "[JOB] Transaksi #{$this->transaksiId} dilewati. " .
-                "Status saat ini: '{$transaksi->status->label()}' (bukan 'menunggu')."
+                    "Status saat ini: '{$transaksi->status->label()}' (bukan 'menunggu').",
             );
             return;
         }
@@ -100,30 +101,35 @@ class ProcessBatchStockUpdate implements ShouldQueue
             /** @var DetailTransaksi $detail */
             foreach ($transaksi->detailTransaksis as $detail) {
                 // Validasi awal sebelum mengunci baris di DB (non-blocking check)
-                if (! $inventoryService->cekKecukupanStok($detail->obat_id, $detail->quantity)) {
+                if (
+                    !$inventoryService->cekKecukupanStok(
+                        $detail->obat_id,
+                        $detail->quantity,
+                    )
+                ) {
                     $namaObat = $detail->obat->name ?? "ID #{$detail->obat_id}";
 
                     throw new \Exception(
                         "Transaksi #{$this->transaksiId} gagal: stok tidak mencukupi " .
-                        "untuk obat '{$namaObat}' (dibutuhkan: {$detail->quantity} unit)."
+                            "untuk obat '{$namaObat}' (dibutuhkan: {$detail->quantity} unit).",
                     );
                 }
 
                 // Jalankan pemotongan stok FIFO dan perbarui batch_stok_id di baris detail
                 $inventoryService->deductStockFIFO(
-                    obatId:           $detail->obat_id,
+                    obatId: $detail->obat_id,
                     quantityToDeduct: $detail->quantity,
-                    detailTransaksiId: $detail->id
+                    detailTransaksiId: $detail->id,
                 );
             }
 
             // Semua stok berhasil dipotong — perbarui status transaksi
-            $transaksi->update(['status' => StatusTransaksi::Diproses]);
+            $transaksi->update(["status" => StatusTransaksi::Diproses]);
 
             Log::info(
                 "[JOB] Transaksi #{$this->transaksiId} berhasil diproses. " .
-                "Status diperbarui ke 'diproses'. " .
-                "Jumlah item: {$transaksi->detailTransaksis->count()}."
+                    "Status diperbarui ke 'diproses'. " .
+                    "Jumlah item: {$transaksi->detailTransaksis->count()}.",
             );
         });
     }
@@ -140,18 +146,18 @@ class ProcessBatchStockUpdate implements ShouldQueue
     {
         Log::error(
             "[JOB] Gagal total memproses stok untuk transaksi #{$this->transaksiId}. " .
-            "Semua percobaan ulang telah habis. " .
-            "Error: {$exception->getMessage()}"
+                "Semua percobaan ulang telah habis. " .
+                "Error: {$exception->getMessage()}",
         );
 
         // Batalkan transaksi agar staf dapat menindaklanjuti secara manual
         Transaksi::find($this->transaksiId)?->update([
-            'status' => StatusTransaksi::Dibatalkan,
+            "status" => StatusTransaksi::Dibatalkan,
         ]);
 
         Log::warning(
             "[JOB] Transaksi #{$this->transaksiId} otomatis dibatalkan " .
-            "akibat kegagalan pemrosesan stok. Perlu tindak lanjut manual."
+                "akibat kegagalan pemrosesan stok. Perlu tindak lanjut manual.",
         );
     }
 }

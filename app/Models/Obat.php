@@ -25,6 +25,7 @@ class Obat extends Model
         "price",
         "minimum_stock",
         "requires_prescription",
+        "gambar_obat",
     ];
 
     /**

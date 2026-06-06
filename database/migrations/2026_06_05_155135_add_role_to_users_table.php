@@ -4,25 +4,28 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
-     * Run the migrations.
+     * Tambahkan kolom peran (role) ke tabel users.
+     * Nilai default adalah 'pasien' agar aman untuk registrasi publik.
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->enum("role", ["admin", "apoteker", "kasir", "pasien"])
+                ->default("pasien")
+                ->after("email_verified_at");
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Batalkan penambahan kolom role.
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("role");
         });
     }
 };

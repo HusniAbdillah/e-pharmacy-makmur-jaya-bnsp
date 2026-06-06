@@ -1,58 +1,159 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
+  <img src="public/e-pharmacy-logo.png" alt="Makmur Jaya E-Pharmacy" height="100">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+  # Makmur Jaya E-Pharmacy
 
-## About Laravel
+  Sistem E-Commerce Penjualan Obat berbasis web untuk **Klinik Makmur Jaya**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+  [![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
+  [![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
+  [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://mysql.com)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+  [![Alpine.js](https://img.shields.io/badge/Alpine.js-3-8BC0D0?style=flat-square&logo=alpinedotjs&logoColor=white)](https://alpinejs.dev)
+  [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
+  [![License](https://img.shields.io/badge/Lisensi-MIT-green?style=flat-square)](LICENSE)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+  Repositori ini dapat diakses di [github.com/HusniAbdillah/e-pharmacy-makmur-jaya-bnsp](https://github.com/HusniAbdillah/e-pharmacy-makmur-jaya-bnsp)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+  > Dikembangkan untuk memenuhi prasyarat **Sertifikasi BNSP Skema Web Developer**
+</div>
 
-## Learning Laravel
+<div align="center">
+  <h3>Dokumen Pendukung Kegiatan Terstruktur (Uji Kompetensi)</h3>
+  <table>
+    <tr>
+      <td><a href="docs/1_perencanaan_proyek.md">1. Dokumen Perencanaan Proyek</a></td>
+      <td><a href="docs/2_analisis_desain_sistem.md">2. Dokumen Analisis, Perancangan, dan Desain Teknis Sistem</a></td>
+    </tr>
+    <tr>
+      <td><a href="docs/3_migrasi_cutover_perubahan.md">3. Dokumen Migrasi, Cutover, dan Perubahan</a></td>
+      <td><a href="docs/4_pengujian.md">4. Dokumen Pengujian (Debugging & UAT)</a></td>
+    </tr>
+    <tr>
+      <td><a href="docs/5_panduan_pengguna.md">5. Dokumen Panduan Pengguna (User Guide & FAQ)</a></td>
+      <td><a href="docs/6_analisis_risiko_keamanan.md">6. Analisis Risiko Keamanan Informasi</a></td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center"><a href="docs/7_gap_analysis_dan_uat.md">7. Analisis Celah Mendalam & Dokumen Pengujian (UAT & Test Cases)</a></td>
+    </tr>
+  </table>
+</div>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tentang Aplikasi
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Makmur Jaya E-Pharmacy adalah platform e-commerce dan manajemen inventaris apotek terintegrasi yang dirancang untuk membantu **Klinik Makmur Jaya** dalam memantau persediaan obat secara real-time, mengelola transaksi online maupun offline, serta mengotomatiskan alur verifikasi resep dokter oleh Apoteker.
 
-## Agentic Development
+**Fitur unggulan:**
+- Autentikasi multi-level (Admin, Apoteker, Kasir, dan Pasien/Pelanggan).
+- Katalog obat dengan pencarian dinamis, filter kategori (obat bebas/resep), dan pengurutan harga (termurah/termahal).
+- Unggah dan verifikasi resep dokter untuk pembelian golongan obat keras.
+- Algoritma pengurangan stok fisik otomatis menggunakan aturan First In First Out (FIFO) berdasarkan masa kadaluarsa terdekat.
+- Sistem POS (Point of Sale) konter untuk transaksi offline kasir klinik dengan pencarian autocomplete.
+- Ekspor laporan penjualan bulanan berformat PDF yang elegan dengan DOMPDF.
+- Parallel CSV bulk import untuk migrasi data master obat secara instan.
+- Audit log aktivitas pengguna dan dashboard log viewer dengan pengelompokan severity error.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
+
+## Prasyarat
+
+| Kebutuhan | Versi |
+|-----------|-------|
+| PHP | 8.4 (Direkomendasikan) / 8.2+ |
+| Composer | 2.x |
+| Node.js | 18.x / 20.x |
+| MySQL | 8.0 |
+| Ekstensi PHP | `gd`, `pdo_mysql`, `mbstring`, `zip`, `bcmath` |
+
+---
+
+## Instalasi
+
+**1. Clone repositori**
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/HusniAbdillah/e-pharmacy-makmur-jaya-bnsp.git
+cd e-pharmacy-makmur-jaya-bnsp
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**2. Install dependensi**
 
-## Contributing
+```bash
+composer install
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**3. Konfigurasi environment**
 
-## Code of Conduct
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Sesuaikan koneksi database MySQL di file `.env`:
 
-## Security Vulnerabilities
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=makmur_jaya_db
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**4. Migrasi & seeder database**
 
-## License
+Perintah ini akan mendeteksi jika database `makmur_jaya_db` belum ada, membuatkannya untuk Anda, menjalankan migrasi skema tabel, dan menyemai data awal (*seed*).
+```bash
+php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**5. Build aset frontend**
+
+```bash
+# Untuk Produksi
+npm run build
+
+# Untuk Pengembangan (hot-reload)
+npm run dev
+```
+
+**6. Jalankan aplikasi**
+
+```bash
+php artisan serve
+```
+
+Buka **`http://127.0.0.1:8000`** di browser Anda.
+
+**7. Queue worker (Untuk pemrosesan antrean FIFO)**
+
+```bash
+php artisan queue:work
+```
+
+---
+
+## Akun Demo Pengujian (Assessor)
+
+| Peran | Email | Password |
+|-------|-------|----------|
+| Admin | admin@makmurjaya.id | Admin@123 |
+| Apoteker | apoteker@makmurjaya.id | Apoteker@123 |
+| Kasir | kasir@makmurjaya.id | Kasir@123 |
+| Pasien | pasien@makmurjaya.id | Pasien@123 |
+
+---
+
+## Stack Teknologi
+
+| Lapisan | Teknologi |
+|---------|-----------|
+| Backend | Laravel 11, PHP 8.4 |
+| Frontend | Tailwind CSS 3, Alpine.js 3, Livewire 3, Vite |
+| Database | MySQL 8.0 |
+| PDF | DomPDF (barryvdh/laravel-dompdf) |
+| Autentikasi | Laravel Breeze (session-based) dengan Volt Component |
+| Ikon | Blade Heroicons (blade-ui-kit/blade-heroicons) |

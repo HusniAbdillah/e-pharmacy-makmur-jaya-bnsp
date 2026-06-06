@@ -20,6 +20,7 @@ class Transaksi extends Model
         "total_price",
         "status",
         "is_online",
+        "resep_path",
     ];
 
     /**
