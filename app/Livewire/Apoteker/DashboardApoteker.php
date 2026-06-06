@@ -48,7 +48,7 @@ class DashboardApoteker extends Component
         $inventoryService = app(InventoryService::class);
 
         // Transaksi menunggu verifikasi
-        $transaksiMenungguVerifikasi = Transaksi::with("user")
+        $transaksiMenungguVerifikasi = Transaksi::with(["user", "detailTransaksis.obat"])
             ->where("status", StatusTransaksi::MenungguVerifikasi)
             ->latest()
             ->get();

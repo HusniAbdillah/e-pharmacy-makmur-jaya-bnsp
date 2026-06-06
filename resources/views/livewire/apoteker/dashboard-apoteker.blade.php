@@ -44,18 +44,41 @@
                         <tbody class="divide-y divide-oat">
                             @foreach($transaksiMenungguVerifikasi as $transaksi)
                                 <tr>
-                                    <td class="p-3 font-mono text-xs">{{ $transaksi->invoice_number }}</td>
-                                    <td class="p-3">{{ $transaksi->user->name }}</td>
-                                    <td class="p-3">{{ $transaksi->created_at->format('d/m/Y H:i') }}</td>
-                                    <td class="p-3 text-right">Rp {{ number_format($transaksi->total_price, 0, ',', '.') }}</td>
+                                    <td class="p-3 font-mono text-xs font-semibold text-black">{{ $transaksi->invoice_number }}</td>
+                                    <td class="p-3">
+                                        <div class="font-medium text-black">{{ $transaksi->user->name }}</div>
+                                        <div class="text-[11px] text-gray-500 mt-1.5 p-2 bg-cream rounded border border-oat max-w-xs">
+                                            <strong class="text-black block mb-0.5">Daftar Item:</strong>
+                                            <ul class="list-disc list-inside space-y-0.5">
+                                                @foreach($transaksi->detailTransaksis as $detail)
+                                                    <li>{{ $detail->obat->name }} <span class="text-gray-400">({{ $detail->quantity }} unit)</span></li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td class="p-3 text-gray-600">{{ $transaksi->created_at->format('d/m/Y H:i') }}</td>
+                                    <td class="p-3 text-right font-medium text-black">Rp {{ number_format($transaksi->total_price, 0, ',', '.') }}</td>
                                     <td class="p-3 text-center">
-                                        <button wire:click="setujuiResep({{ $transaksi->id }})" class="inline-flex items-center gap-1 px-3 py-1 bg-semantic-success text-white rounded-sm hover:scale-105 transition">
-                                            <x-heroicon-o-check-circle class="w-4 h-4" />
-                                            Setujui
-                                        </button>
+                                        <div class="flex items-center justify-center gap-2">
+                                            @if($transaksi->resep_path)
+                                                <a href="{{ asset('storage/' . $transaksi->resep_path) }}" target="_blank"
+                                                   class="inline-flex items-center gap-1 px-3 py-1.5 bg-semantic-info text-white text-xs rounded-sm hover:scale-105 transition">
+                                                    <x-heroicon-o-eye class="w-4 h-4" />
+                                                    Lihat Resep
+                                                </a>
+                                            @else
+                                                <span class="text-xs text-gray-400 italic">Tanpa Berkas</span>
+                                            @endif
+
+                                            <button wire:click="setujuiResep({{ $transaksi->id }})"
+                                                    class="inline-flex items-center gap-1 px-3 py-1.5 bg-semantic-success text-white text-xs rounded-sm hover:scale-105 transition">
+                                                <x-heroicon-o-check-circle class="w-4 h-4" />
+                                                Setujui
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-            @endforeach
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
