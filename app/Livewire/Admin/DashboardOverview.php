@@ -23,15 +23,21 @@ class DashboardOverview extends Component
             ->whereYear("created_at", now()->year)
             ->sum("total_price");
 
-        // Grafik penjualan dummy (4 minggu)
-        $monthlySalesData = json_encode([10, 20, 15, 30]);
+        // Grafik penjualan riil (4 minggu terakhir)
+        $salesData = [];
+        for ($i = 3; $i >= 0; $i--) {
+            $start = now()->subWeeks($i)->startOfWeek();
+            $end = now()->subWeeks($i)->endOfWeek();
+            $salesData[] = Transaksi::where("status", "selesai")
+                ->whereBetween("created_at", [$start, $end])
+                ->count();
+        }
+        $monthlySalesData = json_encode($salesData);
 
         // Stok kritis & kadaluarsa
         $obatStokKritis = $inventoryService->getObatStokKritis();
         $batchKadaluarsa = $inventoryService->getBatchKadaluarsaBersisa();
-        $batchHampirKadaluarsa = $inventoryService->getBatchHampirKadaluarsa(
-            30,
-        );
+        $batchHampirKadaluarsa = $inventoryService->getBatchHampirKadaluarsa(30);
 
         return view("livewire.admin.dashboard-overview", [
             "totalPengguna" => $totalPengguna,

@@ -2,9 +2,20 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- Judul halaman --}}
-        <div class="mb-8">
-            <h1 class="text-5xl font-normal leading-none tracking-tight text-black mb-2">Manajemen Obat</h1>
-            <p class="text-gray-50">Kelola master data produk obat dan batch stok</p>
+        <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-5xl font-normal leading-none tracking-tight text-black mb-2">Manajemen Obat</h1>
+                <p class="text-gray-50">Kelola master data produk obat dan batch stok</p>
+            </div>
+            <div>
+                <button
+                    wire:click="openFormModal()"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-black text-white hover:bg-black/80 rounded-sm transition-colors text-sm font-medium"
+                >
+                    <x-heroicon-o-plus class="w-4 h-4" />
+                    Tambah Obat Baru
+                </button>
+            </div>
         </div>
 
         {{-- Pesan sukses/error --}}
@@ -58,6 +69,7 @@
                             <th class="p-4 font-medium text-gray-50 w-16">Gambar</th>
                             <th class="p-4 font-medium text-gray-50">Obat</th>
                             <th class="p-4 font-medium text-gray-50">Kategori</th>
+                            <th class="p-4 font-medium text-gray-50">Supplier</th>
                             <th class="p-4 font-medium text-gray-50">Harga</th>
                             <th class="p-4 font-medium text-gray-50">Stok Aktif</th>
                             <th class="p-4 font-medium text-gray-50 text-right">Aksi</th>
@@ -105,6 +117,11 @@
                                     <span class="text-sm text-black">{{ $obat->kategoriObat->name ?? '-' }}</span>
                                 </td>
 
+                                {{-- Supplier obat --}}
+                                <td class="p-4">
+                                    <span class="text-sm text-black">{{ $obat->supplier->name ?? '-' }}</span>
+                                </td>
+
                                 {{-- Harga satuan --}}
                                 <td class="p-4 whitespace-nowrap">
                                     <span class="text-sm text-black">
@@ -126,10 +143,20 @@
                                 {{-- Tombol aksi --}}
                                 <td class="p-4">
                                     <div class="flex items-center justify-end gap-2">
+                                        {{-- Edit --}}
+                                        <button
+                                            wire:click="openFormModal({{ $obat->id }})"
+                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs border border-oat rounded-sm bg-white hover:bg-cream text-black transition-colors"
+                                            title="Edit Obat"
+                                        >
+                                            <x-heroicon-o-pencil class="w-3.5 h-3.5" />
+                                            Edit
+                                        </button>
                                         {{-- Buka modal gambar --}}
                                         <button
                                             wire:click="openGambarModal({{ $obat->id }})"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs border border-oat rounded-sm bg-white hover:bg-cream transition-colors"
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs border border-oat rounded-sm bg-white hover:bg-cream transition-colors"
+                                            title="Ubah Gambar"
                                         >
                                             <x-heroicon-o-photo class="w-3.5 h-3.5" />
                                             Gambar
@@ -137,17 +164,28 @@
                                         {{-- Buka modal batch --}}
                                         <button
                                             wire:click="openBatchModal({{ $obat->id }})"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs border border-black rounded-sm bg-black text-white hover:bg-black/80 transition-colors"
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs border border-black rounded-sm bg-black text-white hover:bg-black/80 transition-colors"
+                                            title="Tambah Batch Stok"
                                         >
                                             <x-heroicon-o-plus class="w-3.5 h-3.5" />
                                             Batch
+                                        </button>
+                                        {{-- Hapus --}}
+                                        <button
+                                            wire:click="hapusObat({{ $obat->id }})"
+                                            wire:confirm="Apakah Anda yakin ingin menghapus obat ini?"
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs border border-semantic-danger/30 rounded-sm bg-semantic-danger/5 hover:bg-semantic-danger/10 text-semantic-danger transition-colors"
+                                            title="Hapus Obat"
+                                        >
+                                            <x-heroicon-o-trash class="w-3.5 h-3.5" />
+                                            Hapus
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="p-12 text-center">
+                                <td colspan="7" class="p-12 text-center">
                                     <x-heroicon-o-archive-box class="w-10 h-10 text-gray-50 mx-auto mb-3" />
                                     <p class="text-gray-50">Tidak ada obat ditemukan.</p>
                                 </td>
@@ -164,183 +202,290 @@
         </div>
 
     </div>
-</div>
 
-{{-- ============================================================ --}}
-{{-- MODAL: Tambah Batch Stok                                      --}}
-{{-- ============================================================ --}}
-@if($showBatchModal)
-    {{-- Overlay modal --}}
-    <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-        wire:click="closeBatchModal"
-    >
-        {{-- Kartu modal --}}
-        <div
-            class="bg-white border border-oat rounded-lg w-full max-w-md mx-4 p-6 shadow-lg"
-            wire:click.stop
-        >
-            {{-- Judul modal --}}
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-normal text-black">Tambah Batch Stok</h2>
-                <button
-                    wire:click="closeBatchModal"
-                    class="text-gray-50 hover:text-black transition-colors"
-                >
-                    <x-heroicon-o-x-mark class="w-5 h-5" />
-                </button>
-            </div>
-
-            <div class="space-y-4">
-
-                {{-- Nomor batch --}}
-                <div>
-                    <label class="form-label">Nomor Batch</label>
-                    <input
-                        type="text"
-                        wire:model="batchNumber"
-                        placeholder="Contoh: BTH-2025-001"
-                        class="form-input"
-                    >
-                    @error('batchNumber')
-                        <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
-                    @enderror
+    {{-- ============================================================ --}}
+    {{-- MODAL: Form Tambah / Edit Obat                              --}}
+    {{-- ============================================================ --}}
+    @if($showFormModal)
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 overflow-y-auto py-10" wire:click="closeFormModal">
+            <div class="bg-white border border-oat rounded-lg w-full max-w-2xl mx-4 p-6 shadow-lg my-auto" wire:click.stop>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-normal text-black">{{ $editObatId ? 'Edit Obat' : 'Tambah Obat Baru' }}</h2>
+                    <button wire:click="closeFormModal" class="text-gray-50 hover:text-black transition-colors">
+                        <x-heroicon-o-x-mark class="w-6 h-6" />
+                    </button>
                 </div>
 
-                {{-- Stok awal batch --}}
-                <div>
-                    <label class="form-label">Stok Awal</label>
-                    <input
-                        type="number"
-                        wire:model="initialStock"
-                        placeholder="0"
-                        min="1"
-                        class="form-input"
-                    >
-                    @error('initialStock')
-                        <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
-                    @enderror
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2">
+                    {{-- Nama Obat --}}
+                    <div class="md:col-span-2">
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Nama Obat <span class="text-semantic-danger">*</span></label>
+                        <input type="text" wire:model="name" placeholder="Contoh: Paracetamol 500mg" class="form-input">
+                        @error('name') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Kategori --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Kategori <span class="text-semantic-danger">*</span></label>
+                        <select wire:model="kategoriObatId" class="form-input">
+                            <option value="">-- Pilih Kategori --</option>
+                            @foreach($kategoris as $kategori)
+                                <option value="{{ $kategori->id }}">{{ $kategori->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('kategoriObatId') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Supplier --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Supplier</label>
+                        <select wire:model="supplierId" class="form-input">
+                            <option value="">-- Tanpa Supplier --</option>
+                            @foreach($suppliers as $supplier)
+                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('supplierId') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Harga --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Harga Jual (Rp) <span class="text-semantic-danger">*</span></label>
+                        <input type="number" step="0.01" wire:model="price" placeholder="0" class="form-input">
+                        @error('price') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Batas Stok Minimum --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Batas Stok Minimum <span class="text-semantic-danger">*</span></label>
+                        <input type="number" wire:model="minimum_stock" placeholder="10" class="form-input">
+                        @error('minimum_stock') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Dosis --}}
+                    <div class="md:col-span-2">
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Aturan Dosis <span class="text-semantic-danger">*</span></label>
+                        <input type="text" wire:model="dose" placeholder="Contoh: 3 x 1 tablet sehari setelah makan" class="form-input">
+                        @error('dose') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Komposisi --}}
+                    <div class="md:col-span-2">
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Komposisi</label>
+                        <textarea wire:model="composition" placeholder="Kandungan aktif obat..." rows="2" class="form-input"></textarea>
+                        @error('composition') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Efek Samping --}}
+                    <div class="md:col-span-2">
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Efek Samping</label>
+                        <textarea wire:model="side_effects" placeholder="Efek samping yang mungkin timbul..." rows="2" class="form-input"></textarea>
+                        @error('side_effects') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Deskripsi --}}
+                    <div class="md:col-span-2">
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Deskripsi Obat</label>
+                        <textarea wire:model="description" placeholder="Penjelasan umum obat..." rows="3" class="form-input"></textarea>
+                        @error('description') <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Wajib Resep --}}
+                    <div class="md:col-span-2 flex items-center gap-2 mt-2">
+                        <input type="checkbox" wire:model="requires_prescription" id="requires_prescription" class="w-4 h-4 text-black border-oat rounded-sm focus:ring-black">
+                        <label for="requires_prescription" class="text-sm font-medium text-black">Membutuhkan Resep Dokter (Obat Keras)</label>
+                    </div>
                 </div>
 
-                {{-- Tanggal kedaluwarsa --}}
-                <div>
-                    <label class="form-label">Tanggal Kedaluwarsa</label>
-                    <input
-                        type="date"
-                        wire:model="expirationDate"
-                        class="form-input"
-                    >
-                    @error('expirationDate')
-                        <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
-                    @enderror
+                <div class="flex items-center gap-3 mt-6 border-t border-oat pt-4">
+                    <button wire:click="closeFormModal" class="flex-1 px-4 py-2 text-sm border border-oat rounded-sm bg-white hover:bg-cream transition-colors">
+                        Batal
+                    </button>
+                    <button wire:click="simpanObat" wire:loading.attr="disabled" class="flex-1 px-4 py-2 text-sm rounded-sm bg-black text-white hover:bg-black/80 transition-colors disabled:opacity-60">
+                        <span wire:loading.remove wire:target="simpanObat">Simpan</span>
+                        <span wire:loading wire:target="simpanObat">Menyimpan...</span>
+                    </button>
                 </div>
-            </div>
-
-            {{-- Tombol aksi modal --}}
-            <div class="flex items-center gap-3 mt-6">
-                <button
-                    wire:click="closeBatchModal"
-                    class="flex-1 px-4 py-2 text-sm border border-oat rounded-sm bg-white hover:bg-cream transition-colors"
-                >
-                    Batal
-                </button>
-                <button
-                    wire:click="tambahBatch"
-                    wire:loading.attr="disabled"
-                    wire:target="tambahBatch"
-                    class="flex-1 px-4 py-2 text-sm rounded-sm bg-black text-white hover:bg-black/80 transition-colors disabled:opacity-60"
-                >
-                    <span wire:loading.remove wire:target="tambahBatch">Simpan</span>
-                    <span wire:loading wire:target="tambahBatch">Menyimpan...</span>
-                </button>
             </div>
         </div>
-    </div>
-@endif
+    @endif
 
-{{-- ============================================================ --}}
-{{-- MODAL: Upload Gambar Obat                                     --}}
-{{-- ============================================================ --}}
-@if($showGambarModal)
-    {{-- Overlay modal --}}
-    <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-        wire:click="closeGambarModal"
-    >
-        {{-- Kartu modal --}}
+    {{-- ============================================================ --}}
+    {{-- MODAL: Tambah Batch Stok                                      --}}
+    {{-- ============================================================ --}}
+    @if($showBatchModal)
+        {{-- Overlay modal --}}
         <div
-            class="bg-white border border-oat rounded-lg w-full max-w-md mx-4 p-6 shadow-lg"
-            wire:click.stop
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            wire:click="closeBatchModal"
         >
-            {{-- Judul modal --}}
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-normal text-black">Upload Gambar Obat</h2>
-                <button
-                    wire:click="closeGambarModal"
-                    class="text-gray-50 hover:text-black transition-colors"
-                >
-                    <x-heroicon-o-x-mark class="w-5 h-5" />
-                </button>
-            </div>
+            {{-- Kartu modal --}}
+            <div
+                class="bg-white border border-oat rounded-lg w-full max-w-md mx-4 p-6 shadow-lg"
+                wire:click.stop
+            >
+                {{-- Judul modal --}}
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-normal text-black">Tambah Batch Stok</h2>
+                    <button
+                        wire:click="closeBatchModal"
+                        class="text-gray-50 hover:text-black transition-colors"
+                    >
+                        <x-heroicon-o-x-mark class="w-5 h-5" />
+                    </button>
+                </div>
 
-            <div class="space-y-4">
+                <div class="space-y-4">
 
-                {{-- Preview gambar live --}}
-                @if($gambarObat)
-                    <div class="flex justify-center">
-                        <img
-                            src="{{ $gambarObat->temporaryUrl() }}"
-                            alt="Preview gambar"
-                            class="w-40 h-40 object-cover rounded-lg border border-oat"
+                    {{-- Nomor batch --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Nomor Batch</label>
+                        <input
+                            type="text"
+                            wire:model="batchNumber"
+                            placeholder="Contoh: BTH-2025-001"
+                            class="form-input"
                         >
+                        @error('batchNumber')
+                            <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
+                        @enderror
                     </div>
-                @else
-                    {{-- Placeholder sebelum upload --}}
-                    <div class="flex justify-center">
-                        <div class="w-40 h-40 rounded-lg border border-oat bg-cream flex flex-col items-center justify-center gap-2">
-                            <x-heroicon-o-photo class="w-10 h-10 text-gray-50" />
-                            <p class="text-xs text-gray-50">Belum ada gambar</p>
+
+                    {{-- Stok awal batch --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Stok Awal</label>
+                        <input
+                            type="number"
+                            wire:model="initialStock"
+                            placeholder="0"
+                            min="1"
+                            class="form-input"
+                        >
+                        @error('initialStock')
+                            <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- Tanggal kedaluwarsa --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Tanggal Kedaluwarsa</label>
+                        <input
+                            type="date"
+                            wire:model="expirationDate"
+                            class="form-input"
+                        >
+                        @error('expirationDate')
+                            <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Tombol aksi modal --}}
+                <div class="flex items-center gap-3 mt-6">
+                    <button
+                        wire:click="closeBatchModal"
+                        class="flex-1 px-4 py-2 text-sm border border-oat rounded-sm bg-white hover:bg-cream transition-colors"
+                    >
+                        Batal
+                    </button>
+                    <button
+                        wire:click="tambahBatch"
+                        wire:loading.attr="disabled"
+                        wire:target="tambahBatch"
+                        class="flex-1 px-4 py-2 text-sm rounded-sm bg-black text-white hover:bg-black/80 transition-colors disabled:opacity-60"
+                    >
+                        <span wire:loading.remove wire:target="tambahBatch">Simpan</span>
+                        <span wire:loading wire:target="tambahBatch">Menyimpan...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- ============================================================ --}}
+    {{-- MODAL: Upload Gambar Obat                                     --}}
+    {{-- ============================================================ --}}
+    @if($showGambarModal)
+        {{-- Overlay modal --}}
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            wire:click="closeGambarModal"
+        >
+            {{-- Kartu modal --}}
+            <div
+                class="bg-white border border-oat rounded-lg w-full max-w-md mx-4 p-6 shadow-lg"
+                wire:click.stop
+            >
+                {{-- Judul modal --}}
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-normal text-black">Upload Gambar Obat</h2>
+                    <button
+                        wire:click="closeGambarModal"
+                        class="text-gray-50 hover:text-black transition-colors"
+                    >
+                        <x-heroicon-o-x-mark class="w-5 h-5" />
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+
+                    {{-- Preview gambar live --}}
+                    @if($gambarObat)
+                        <div class="flex justify-center">
+                            <img
+                                src="{{ $gambarObat->temporaryUrl() }}"
+                                alt="Preview gambar"
+                                class="w-40 h-40 object-cover rounded-lg border border-oat"
+                            >
+                        </div>
+                    @else
+                        {{-- Placeholder sebelum upload --}}
+                        <div class="flex justify-center">
+                            <div class="w-40 h-40 rounded-lg border border-oat bg-cream flex flex-col items-center justify-center gap-2">
+                                <x-heroicon-o-photo class="w-10 h-10 text-gray-50" />
+                                <p class="text-xs text-gray-50">Belum ada gambar</p>
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Input file gambar --}}
+                    <div>
+                        <label class="form-label text-black font-medium text-xs mb-1 block">Pilih Gambar</label>
+                        <input
+                            type="file"
+                            wire:model="gambarObat"
+                            accept="image/*"
+                            class="form-input"
+                        >
+                        @error('gambarObat')
+                            <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
+                        @enderror
+                        {{-- Indikator upload berjalan --}}
+                        <div wire:loading wire:target="gambarObat" class="text-xs text-gray-50 mt-1">
+                            Mengunggah gambar...
                         </div>
                     </div>
-                @endif
+                </div>
 
-                {{-- Input file gambar --}}
-                <div>
-                    <label class="form-label">Pilih Gambar</label>
-                    <input
-                        type="file"
-                        wire:model="gambarObat"
-                        accept="image/*"
-                        class="form-input"
+                {{-- Tombol aksi modal --}}
+                <div class="flex items-center gap-3 mt-6">
+                    <button
+                        wire:click="closeGambarModal"
+                        class="flex-1 px-4 py-2 text-sm border border-oat rounded-sm bg-white hover:bg-cream transition-colors"
                     >
-                    @error('gambarObat')
-                        <span class="text-xs text-semantic-danger mt-1 block">{{ $message }}</span>
-                    @enderror
-                    {{-- Indikator upload berjalan --}}
-                    <div wire:loading wire:target="gambarObat" class="text-xs text-gray-50 mt-1">
-                        Mengunggah gambar...
-                    </div>
+                        Batal
+                    </button>
+                    <button
+                        wire:click="simpanGambar"
+                        wire:loading.attr="disabled"
+                        wire:target="simpanGambar"
+                        class="flex-1 px-4 py-2 text-sm rounded-sm bg-black text-white hover:bg-black/80 transition-colors disabled:opacity-60"
+                    >
+                        <span wire:loading.remove wire:target="simpanGambar">Simpan</span>
+                        <span wire:loading wire:target="simpanGambar">Menyimpan...</span>
+                    </button>
                 </div>
             </div>
-
-            {{-- Tombol aksi modal --}}
-            <div class="flex items-center gap-3 mt-6">
-                <button
-                    wire:click="closeGambarModal"
-                    class="flex-1 px-4 py-2 text-sm border border-oat rounded-sm bg-white hover:bg-cream transition-colors"
-                >
-                    Batal
-                </button>
-                <button
-                    wire:click="simpanGambar"
-                    wire:loading.attr="disabled"
-                    wire:target="simpanGambar"
-                    class="flex-1 px-4 py-2 text-sm rounded-sm bg-black text-white hover:bg-black/80 transition-colors disabled:opacity-60"
-                >
-                    <span wire:loading.remove wire:target="simpanGambar">Simpan</span>
-                    <span wire:loading wire:target="simpanGambar">Menyimpan...</span>
-                </button>
-            </div>
         </div>
-    </div>
-@endif
+    @endif
+</div>

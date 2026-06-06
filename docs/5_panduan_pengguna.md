@@ -87,3 +87,57 @@ Anda dapat menghubungi layanan bantuan klinik Makmur Jaya melalui nomor telepon 
 *   **Masalah: Keranjang Belanja tidak merespon saat diklik "Tambah ke Keranjang".**
     *   *Penyebab:* Sesi login Anda telah habis masa berlakunya (session timeout).
     *   *Solusi:* Muat ulang (*refresh*) halaman web Anda, lakukan masuk (*login*) kembali ke akun Pasien Anda, kemudian coba tambahkan kembali obat ke keranjang.
+
+---
+
+### 4. Dokumentasi API (Application Programming Interface)
+
+Untuk memfasilitasi integrasi dengan sistem eksternal, Klinik Makmur Jaya menyediakan endpoint API publik berikut:
+
+#### 4.1 Endpoint: Get Katalog Obat
+*   **URL:** `/api/obat`
+*   **Method:** `GET`
+*   **Format Respons:** JSON
+*   **Contoh Respons Sukses (HTTP 200):**
+    ```json
+    {
+      "status": "success",
+      "count": 20,
+      "data": [
+        {
+          "id": 1,
+          "name": "Amoxicillin 500mg",
+          "kategori": "Obat Resep",
+          "price": 4500.00,
+          "requires_prescription": true,
+          "total_stock": 120,
+          "composition": "Amoxicillin trihydrate 574mg setara Amoxicillin 500mg",
+          "dose": "3 x 1 kapsul/hari (setiap 8 jam)"
+        }
+      ]
+    }
+    ```
+
+#### 4.2 Endpoint: Cek Stok Kritis & Kadaluarsa
+*   **URL:** `/api/cek-stok-kritis`
+*   **Method:** `GET`
+*   **Format Respons:** JSON
+*   **Contoh Respons Sukses (HTTP 200):**
+    ```json
+    {
+      "kritis": [
+        {
+          "id": 1,
+          "name": "Amoxicillin 500mg",
+          "stok": 4
+        }
+      ],
+      "hampir_kadaluarsa": [
+        {
+          "batch_number": "BTH-AMX-2026",
+          "name": "Amoxicillin 500mg",
+          "expiration_date": "15/07/2026"
+        }
+      ]
+    }
+    ```

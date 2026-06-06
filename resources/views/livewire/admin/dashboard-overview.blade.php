@@ -1,4 +1,7 @@
 <div class="min-h-screen bg-cream py-8">
+    {{-- Leaflet.js CSS --}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {{-- Header --}}
         <div class="mb-8">
@@ -26,11 +29,21 @@
             </div>
         </div>
 
-        {{-- Grafik Penjualan Bulanan --}}
-        <div class="bg-white border border-oat rounded-lg p-5 mb-8" wire:ignore>
-            <h3 class="text-2xl font-normal text-black mb-4">Penjualan Bulanan</h3>
-            <p class="text-sm text-gray-50 mb-4">Jumlah transaksi per minggu (bulan ini)</p>
-            <canvas id="salesChart" style="max-height: 280px;"></canvas>
+        {{-- Grid: Grafik & Peta Spasial --}}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {{-- Grafik Penjualan Bulanan --}}
+            <div class="bg-white border border-oat rounded-lg p-5" wire:ignore>
+                <h3 class="text-2xl font-normal text-black mb-1">Penjualan Bulanan</h3>
+                <p class="text-sm text-gray-50 mb-4">Jumlah transaksi selesai per minggu (4 minggu terakhir)</p>
+                <canvas id="salesChart" style="max-height: 280px;"></canvas>
+            </div>
+
+            {{-- Peta Spasial Gudang --}}
+            <div class="bg-white border border-oat rounded-lg p-5" wire:ignore>
+                <h3 class="text-2xl font-normal text-black mb-1">Peta Jaringan Gudang</h3>
+                <p class="text-sm text-gray-50 mb-4">Lokasi gudang penyimpanan suplai obat Klinik Makmur Jaya</p>
+                <div id="warehouseMap" style="height: 280px;" class="rounded-md border border-oat"></div>
+            </div>
         </div>
 
         {{-- Alert: Batch Kadaluarsa --}}
@@ -148,52 +161,92 @@
     </div>
 </div>
 
+{{-- Leaflet.js JS --}}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 {{-- Chart.js via CDN --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 <script>
     (function () {
-        // Data penjualan dari server
+        // 1. Inisialisasi Chart Penjualan
         var salesData = {!! $monthlySalesData !!};
-
         var ctx = document.getElementById('salesChart');
-        if (!ctx) return;
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
-                datasets: [{
-                    label: 'Transaksi Selesai',
-                    data: salesData,
-                    backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                    borderColor: 'rgba(0, 0, 0, 0.7)',
-                    borderWidth: 1.5,
-                    borderRadius: 4,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(ctx) {
-                                return ' ' + ctx.parsed.y + ' transaksi';
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                    datasets: [{
+                        label: 'Transaksi Selesai',
+                        data: salesData,
+                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                        borderColor: 'rgba(0, 0, 0, 0.7)',
+                        borderWidth: 1.5,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return ' ' + ctx.parsed.y + ' transaksi selesai';
+                                }
                             }
                         }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 5 },
-                        grid: { color: 'rgba(0,0,0,0.05)' }
                     },
-                    x: {
-                        grid: { display: false }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        // 2. Inisialisasi Peta Spasial Gudang (Leaflet.js)
+        var mapContainer = document.getElementById('warehouseMap');
+        if (mapContainer) {
+            // Koordinat Jakarta Pusat
+            var map = L.map('warehouseMap').setView([-6.2088, 106.8456], 11);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Daftar gudang penyimpan
+            var warehouses = [
+                {
+                    name: "Gudang Farmasi Pusat (Makmur Jaya)",
+                    lat: -6.1824,
+                    lng: 106.8291,
+                    desc: "Pusat penyimpanan & distribusi utama obat resep & alat medis."
+                },
+                {
+                    name: "Gudang Cabang Jakarta Barat",
+                    lat: -6.1683,
+                    lng: 106.7869,
+                    desc: "Penyimpanan buffer stok obat bebas & suplemen wilayah barat."
+                },
+                {
+                    name: "Gudang Cabang Jakarta Timur",
+                    lat: -6.2250,
+                    lng: 106.9000,
+                    desc: "Pusat logistik pengemasan & peracikan sekunder."
+                }
+            ];
+
+            warehouses.forEach(function (w) {
+                L.marker([w.lat, w.lng]).addTo(map)
+                    .bindPopup("<strong class='text-sm block mb-1'>" + w.name + "</strong><span class='text-xs text-gray-600'>" + w.desc + "</span>");
+            });
+        }
     })();
 </script>

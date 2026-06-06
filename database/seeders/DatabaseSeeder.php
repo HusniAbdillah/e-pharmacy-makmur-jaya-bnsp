@@ -85,6 +85,43 @@ class DatabaseSeeder extends Seeder
         );
 
         // ------------------------------------------------------------------
+        // LANGKAH 2.5: Supplier
+        // ------------------------------------------------------------------
+        $this->command->info("  → Menyemai data supplier...");
+        $suppliersData = [
+            [
+                'name' => 'PT. Kimia Farma Trading & Distribution',
+                'phone' => '021-3847777',
+                'email' => 'info@kimiafarma.co.id',
+                'address' => 'Jl. Budi Utomo No. 1, Jakarta Pusat',
+            ],
+            [
+                'name' => 'PT. Kalbe Farma Tbk',
+                'phone' => '021-8983322',
+                'email' => 'contact@kalbe.co.id',
+                'address' => 'Kawasan Industri Delta Silicon, Cikarang, Bekasi',
+            ],
+            [
+                'name' => 'PT. Bina San Prima',
+                'phone' => '022-7310000',
+                'email' => 'bandung@binasanprima.com',
+                'address' => 'Jl. Soekarno-Hatta No. 162, Bandung',
+            ],
+            [
+                'name' => 'PT. Mensa Bina Sukses',
+                'phone' => '021-46822222',
+                'email' => 'mbs@mensa.co.id',
+                'address' => 'Jl. Pulo Kambing II No. 27, JIEP Pulogadung, Jakarta Timur',
+            ]
+        ];
+
+        $suppliers = collect();
+        foreach ($suppliersData as $s) {
+            $suppliers->push(\App\Models\Supplier::firstOrCreate(['name' => $s['name']], $s));
+        }
+        $this->command->info("  ✓ Data supplier berhasil disemai.");
+
+        // ------------------------------------------------------------------
         // LANGKAH 3: Master Data Obat Per Kategori
         // ------------------------------------------------------------------
         $this->command->info("  → Menyemai data obat per kategori...");
@@ -341,15 +378,19 @@ class DatabaseSeeder extends Seeder
             \Illuminate\Support\Collection $daftarObat,
             KategoriObat $kategori,
             bool $perluResep,
-        ): \Illuminate\Support\Collection {
+        ) use ($suppliers): \Illuminate\Support\Collection {
             return $daftarObat->map(function (array $data) use (
                 $kategori,
                 $perluResep,
+                $suppliers,
             ): Obat {
+                // Pilih supplier acak
+                $supplierId = $suppliers->isNotEmpty() ? $suppliers->random()->id : null;
                 return Obat::firstOrCreate(
                     ["name" => $data["name"]],
                     array_merge($data, [
                         "kategori_obat_id" => $kategori->id,
+                        "supplier_id" => $supplierId,
                         "requires_prescription" => $perluResep,
                     ]),
                 );

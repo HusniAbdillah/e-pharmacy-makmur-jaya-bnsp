@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\BatchStok;
 use App\Models\KategoriObat;
 use App\Models\Obat;
+use App\Models\Supplier;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -28,6 +29,20 @@ class ManajemenObat extends Component
     public ?int $gambarObatId = null;
     public $gambarObat = null;
 
+    // Modal CRUD Obat
+    public bool $showFormModal = false;
+    public ?int $editObatId = null;
+    public ?int $kategoriObatId = null;
+    public ?int $supplierId = null;
+    public string $name = "";
+    public string $description = "";
+    public string $composition = "";
+    public string $dose = "";
+    public string $side_effects = "";
+    public float $price = 0.0;
+    public int $minimum_stock = 10;
+    public bool $requires_prescription = false;
+
     protected $queryString = ["search", "kategoriFilter"];
 
     public function updatingSearch(): void
@@ -38,6 +53,126 @@ class ManajemenObat extends Component
     public function updatingKategoriFilter(): void
     {
         $this->resetPage();
+    }
+
+    // =========================================================================
+    // CRUD OBAT FORM MODAL
+    // =========================================================================
+
+    public function openFormModal(?int $id = null): void
+    {
+        $this->resetValidation();
+        $this->reset([
+            "editObatId",
+            "kategoriObatId",
+            "supplierId",
+            "name",
+            "description",
+            "composition",
+            "dose",
+            "side_effects",
+            "price",
+            "minimum_stock",
+            "requires_prescription"
+        ]);
+
+        if ($id) {
+            $obat = Obat::findOrFail($id);
+            $this->editObatId = $obat->id;
+            $this->kategoriObatId = $obat->kategori_obat_id;
+            $this->supplierId = $obat->supplier_id;
+            $this->name = $obat->name;
+            $this->description = $obat->description ?? "";
+            $this->composition = $obat->composition ?? "";
+            $this->dose = $obat->dose;
+            $this->side_effects = $obat->side_effects ?? "";
+            $this->price = (float) $obat->price;
+            $this->minimum_stock = $obat->minimum_stock;
+            $this->requires_prescription = (bool) $obat->requires_prescription;
+        }
+
+        $this->showFormModal = true;
+    }
+
+    public function closeFormModal(): void
+    {
+        $this->showFormModal = false;
+    }
+
+    public function simpanObat(): void
+    {
+        $this->validate([
+            "kategoriObatId" => "required|exists:kategori_obats,id",
+            "supplierId" => "nullable|exists:suppliers,id",
+            "name" => "required|string|max:255",
+            "description" => "nullable|string",
+            "composition" => "nullable|string",
+            "dose" => "required|string|max:100",
+            "side_effects" => "nullable|string",
+            "price" => "required|numeric|min:0",
+            "minimum_stock" => "required|integer|min:0",
+            "requires_prescription" => "boolean",
+        ], [
+            "kategoriObatId.required" => "Kategori wajib dipilih.",
+            "name.required" => "Nama obat wajib diisi.",
+            "dose.required" => "Dosis wajib diisi.",
+            "price.required" => "Harga wajib diisi.",
+            "price.numeric" => "Harga harus berupa angka.",
+            "price.min" => "Harga minimal Rp 0.",
+            "minimum_stock.required" => "Stok minimum wajib diisi.",
+            "minimum_stock.integer" => "Stok minimum harus berupa angka.",
+            "minimum_stock.min" => "Stok minimum minimal 0.",
+        ]);
+
+        $data = [
+            "kategori_obat_id" => $this->kategoriObatId,
+            "supplier_id" => $this->supplierId,
+            "name" => $this->name,
+            "description" => $this->description ?: null,
+            "composition" => $this->composition ?: null,
+            "dose" => $this->dose,
+            "side_effects" => $this->side_effects ?: null,
+            "price" => $this->price,
+            "minimum_stock" => $this->minimum_stock,
+            "requires_prescription" => $this->requires_prescription,
+        ];
+
+        if ($this->editObatId) {
+            Obat::findOrFail($this->editObatId)->update($data);
+            session()->flash("success", "Obat berhasil diperbarui.");
+        } else {
+            Obat::create($data);
+            session()->flash("success", "Obat baru berhasil ditambahkan.");
+        }
+
+        // Pemicu event asinkron agar toast mendeteksi jika ada stok kritis baru
+        $this->dispatch('obat-updated');
+
+        $this->closeFormModal();
+    }
+
+    public function hapusObat(int $id): void
+    {
+        $obat = Obat::findOrFail($id);
+
+        // Periksa apakah obat memiliki relasi transaksi
+        if ($obat->detailTransaksis()->exists()) {
+            session()->flash("error", "Obat '{$obat->name}' tidak dapat dihapus karena sudah memiliki riwayat transaksi.");
+            return;
+        }
+
+        // Periksa apakah obat memiliki sisa stok aktif
+        if ($obat->batchStoks()->where('current_stock', '>', 0)->exists()) {
+            session()->flash("error", "Obat '{$obat->name}' tidak dapat dihapus karena masih memiliki batch stok aktif.");
+            return;
+        }
+
+        // Hapus batch stok kosong
+        $obat->batchStoks()->delete();
+        $obat->delete();
+
+        session()->flash("success", "Obat berhasil dihapus dari sistem.");
+        $this->dispatch('obat-updated');
     }
 
     // =========================================================================
@@ -91,6 +226,7 @@ class ManajemenObat extends Component
         ]);
 
         session()->flash("success", "Batch stok berhasil ditambahkan.");
+        $this->dispatch('obat-updated');
         $this->closeBatchModal();
     }
 
@@ -137,6 +273,7 @@ class ManajemenObat extends Component
     public function render()
     {
         $kategoris = KategoriObat::all();
+        $suppliers = Supplier::all();
 
         $obats = Obat::with(["kategoriObat", "batchStoks"])
             ->when(
@@ -152,6 +289,7 @@ class ManajemenObat extends Component
         return view("livewire.admin.manajemen-obat", [
             "obats" => $obats,
             "kategoris" => $kategoris,
+            "suppliers" => $suppliers,
         ]);
     }
 }

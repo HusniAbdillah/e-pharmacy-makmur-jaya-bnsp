@@ -17,6 +17,7 @@ class Obat extends Model
      */
     protected $fillable = [
         "kategori_obat_id",
+        "supplier_id",
         "name",
         "description",
         "composition",
@@ -44,6 +45,14 @@ class Obat extends Model
     // =========================================================================
     // RELASI
     // =========================================================================
+
+    /**
+     * Obat ini dipasok oleh satu supplier.
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, "supplier_id");
+    }
 
     /**
      * Obat ini termasuk dalam satu kategori obat.

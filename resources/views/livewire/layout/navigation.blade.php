@@ -67,6 +67,18 @@ new class extends Component {
                                     </span>
                                 </x-nav-link>
                             @endif
+                            <x-nav-link :href="route('admin.supplier')" :active="request()->routeIs('admin.supplier')" wire:navigate>
+                                <span class="inline-flex items-center gap-1.5">
+                                    <x-heroicon-o-truck class="w-4 h-4" />
+                                    Supplier
+                                </span>
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.pelanggan')" :active="request()->routeIs('admin.pelanggan')" wire:navigate>
+                                <span class="inline-flex items-center gap-1.5">
+                                    <x-heroicon-o-users class="w-4 h-4" />
+                                    Pelanggan
+                                </span>
+                            </x-nav-link>
                             @if(Route::has('admin.transaksi'))
                                 <x-nav-link :href="route('admin.transaksi')" :active="request()->routeIs('admin.transaksi')" wire:navigate>
                                     <span class="inline-flex items-center gap-1.5">
@@ -278,6 +290,18 @@ new class extends Component {
                             </span>
                         </x-responsive-nav-link>
                     @endif
+                    <x-responsive-nav-link :href="route('admin.supplier')" :active="request()->routeIs('admin.supplier')" wire:navigate>
+                        <span class="inline-flex items-center gap-2">
+                            <x-heroicon-o-truck class="w-4 h-4" />
+                            Supplier
+                        </span>
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.pelanggan')" :active="request()->routeIs('admin.pelanggan')" wire:navigate>
+                        <span class="inline-flex items-center gap-2">
+                            <x-heroicon-o-users class="w-4 h-4" />
+                            Pelanggan
+                        </span>
+                    </x-responsive-nav-link>
                     @if(Route::has('admin.transaksi'))
                         <x-responsive-nav-link :href="route('admin.transaksi')" :active="request()->routeIs('admin.transaksi')" wire:navigate>
                             <span class="inline-flex items-center gap-2">
