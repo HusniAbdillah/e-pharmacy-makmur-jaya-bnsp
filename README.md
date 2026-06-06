@@ -135,6 +135,36 @@ Buka **`http://127.0.0.1:8000`** di browser Anda.
 php artisan queue:work
 ```
 
+**8. Menjalankan Uji Otomatis (PHPUnit/Feature Tests)**
+
+```bash
+php artisan test
+```
+
+---
+
+## Troubleshooting & Pemeliharaan
+
+Jika Anda mengalami masalah saat instalasi atau pengoperasian, jalankan perintah pemeliharaan berikut:
+
+*   **Masalah Hak Akses File Terkunci (Windows Access Denied pada View Compiler):**
+    ```bash
+    php artisan view:clear
+    ```
+*   **Perubahan Konfigurasi `.env` Tidak Terbaca:**
+    ```bash
+    php artisan config:clear
+    php artisan config:cache
+    ```
+*   **Membersihkan Cache Aplikasi Secara Menyeluruh:**
+    ```bash
+    php artisan cache:clear
+    ```
+*   **Mengulang Antrean Job FIFO yang Gagal:**
+    ```bash
+    php artisan queue:retry all
+    ```
+
 ---
 
 ## Akun Demo Pengujian (Assessor)
