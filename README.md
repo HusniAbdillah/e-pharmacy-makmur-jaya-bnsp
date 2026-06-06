@@ -61,6 +61,57 @@ Makmur Jaya E-Pharmacy adalah platform e-commerce dan manajemen inventaris apote
 
 ---
 
+## Antarmuka Aplikasi
+
+<table align="center" style="width: 100%; text-align: center;">
+  <tr>
+    <td width="20%">
+      <img src="public/images/1.png" alt="Katalog Utama" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Katalog Utama</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/2.png" alt="Detail Obat" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Detail Obat</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/3.png" alt="Keranjang Belanja" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Keranjang Belanja</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/4.png" alt="Halaman Checkout" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Halaman Checkout</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/5.png" alt="Pesanan Sukses" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Pesanan Sukses</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%">
+      <img src="public/images/6.png" alt="Transaksi Saya" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Transaksi Saya</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/7.png" alt="Point of Sale (POS)" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Point of Sale (POS)</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/8.png" alt="Dasbor Apoteker" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Dasbor Apoteker</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/9.png" alt="Manajemen Obat" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Manajemen Obat</sub>
+    </td>
+    <td width="20%">
+      <img src="public/images/10.png" alt="Log Aktivitas" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Log Aktivitas</sub>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## Prasyarat
 
 | Kebutuhan | Versi |
@@ -114,7 +165,14 @@ Perintah ini akan mendeteksi jika database `makmur_jaya_db` belum ada, membuatka
 php artisan migrate --seed
 ```
 
-**5. Build aset frontend**
+**5. Hubungkan link penyimpanan (storage:link)**
+
+Jalankan perintah ini sekali saja untuk membuat tautan simbolik dari direktori publik ke folder penyimpanan media resep/obat:
+```bash
+php artisan storage:link
+```
+
+**6. Build aset frontend**
 
 ```bash
 # Untuk Produksi
@@ -124,7 +182,7 @@ npm run build
 npm run dev
 ```
 
-**6. Jalankan aplikasi**
+**7. Jalankan aplikasi**
 
 ```bash
 php artisan serve
@@ -132,13 +190,13 @@ php artisan serve
 
 Buka **`http://127.0.0.1:8000`** di browser Anda.
 
-**7. Queue worker (Untuk pemrosesan antrean FIFO)**
+**8. Queue worker (Untuk pemrosesan antrean FIFO)**
 
 ```bash
 php artisan queue:work
 ```
 
-**8. Menjalankan Uji Otomatis (PHPUnit/Feature Tests)**
+**9. Menjalankan Uji Otomatis (PHPUnit/Feature Tests)**
 
 ```bash
 php artisan test
