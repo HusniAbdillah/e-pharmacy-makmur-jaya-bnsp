@@ -65,47 +65,63 @@ Makmur Jaya E-Pharmacy adalah platform e-commerce dan manajemen inventaris apote
 
 <table align="center" style="width: 100%; text-align: center;">
   <tr>
-    <td width="20%">
-      <img src="public/images/1.png" alt="Katalog Utama" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Katalog Utama</sub>
+    <td width="50%">
+      <img src="public/images/1.png" alt="Katalog Obat" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Katalog Obat (Guest / Pasien)</sub>
     </td>
-    <td width="20%">
+    <td width="50%">
       <img src="public/images/2.png" alt="Detail Obat" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Detail Obat</sub>
-    </td>
-    <td width="20%">
-      <img src="public/images/3.png" alt="Keranjang Belanja" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Keranjang Belanja</sub>
-    </td>
-    <td width="20%">
-      <img src="public/images/4.png" alt="Halaman Checkout" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Halaman Checkout</sub>
-    </td>
-    <td width="20%">
-      <img src="public/images/5.png" alt="Pesanan Sukses" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Pesanan Sukses</sub>
+      <sub>Detail Obat (Informasi Dosis & Resep)</sub>
     </td>
   </tr>
   <tr>
-    <td width="20%">
-      <img src="public/images/6.png" alt="Transaksi Saya" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Transaksi Saya</sub>
+    <td width="50%">
+      <img src="public/images/3.png" alt="Keranjang Belanja" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Keranjang Belanja Pasien</sub>
     </td>
-    <td width="20%">
-      <img src="public/images/7.png" alt="Point of Sale (POS)" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Point of Sale (POS)</sub>
+    <td width="50%">
+      <img src="public/images/4.png" alt="Halaman Checkout" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Checkout & Unggah Resep Dokter</sub>
     </td>
-    <td width="20%">
-      <img src="public/images/8.png" alt="Dasbor Apoteker" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Dasbor Apoteker</sub>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="public/images/5.png" alt="Riwayat Transaksi Saya" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Riwayat Transaksi Saya (Pasien)</sub>
     </td>
-    <td width="20%">
-      <img src="public/images/9.png" alt="Manajemen Obat" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Manajemen Obat</sub>
+    <td width="50%">
+      <img src="public/images/6.png" alt="Point of Sale (POS)" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Point of Sale / POS Loket Fisik (Kasir)</sub>
     </td>
-    <td width="20%">
-      <img src="public/images/10.png" alt="Log Aktivitas" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
-      <sub>Log Aktivitas</sub>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="public/images/7.png" alt="Dashboard Admin" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Dashboard Utama Administrator</sub>
+    </td>
+    <td width="50%">
+      <img src="public/images/8.png" alt="Manajemen Obat" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Manajemen & Edit Master Obat (Admin)</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="public/images/9.png" alt="Manajemen Supplier" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Manajemen Master Supplier (Admin)</sub>
+    </td>
+    <td width="50%">
+      <img src="public/images/10.png" alt="Manajemen Transaksi" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Manajemen & Update Status Transaksi (Admin)</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="public/images/11.png" alt="Log Aktivitas" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Log Aktivitas & Audit Trail Pengguna</sub>
+    </td>
+    <td width="50%">
+      <img src="public/images/12.png" alt="Log Viewer" style="border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);"><br>
+      <sub>Laravel Log Viewer (FIFO & Engine Audit)</sub>
     </td>
   </tr>
 </table>
