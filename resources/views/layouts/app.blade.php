@@ -17,9 +17,14 @@
     </head>
     <body class="font-sans antialiased bg-cream text-black selection:bg-orange selection:text-white">
         <div class="min-h-screen">
+            @php
+                $isBackend = auth()->check() && auth()->user()->isStaf();
+                $widthClass = $isBackend ? 'max-w-[90rem]' : 'max-w-7xl';
+            @endphp
+
             <!-- Navigation -->
             <nav class="bg-white border-b border-oat sticky top-0 z-50">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="{{ $widthClass }} mx-auto px-4 sm:px-6 lg:px-8">
                     <livewire:layout.navigation />
                 </div>
             </nav>
@@ -27,7 +32,7 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white border-b border-oat">
-                    <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+                    <div class="{{ $widthClass }} mx-auto py-10 px-4 sm:px-6 lg:px-8">
                         <h2 class="text-[32px] tracking-[-0.96px] leading-none">
                             {{ $header }}
                         </h2>
@@ -36,7 +41,7 @@
             @endif
 
             <!-- Page Content -->
-            <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <main class="{{ $widthClass }} mx-auto py-12 px-4 sm:px-6 lg:px-8">
                 {{ $slot }}
             </main>
         </div>

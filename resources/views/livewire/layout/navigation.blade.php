@@ -47,38 +47,53 @@ new class extends Component {
 
                         {{-- Admin --}}
                         @if($role === \App\Enums\RolePengguna::Admin)
+                            @php
+                                $isMasterActive = request()->routeIs('admin.kategori') || request()->routeIs('admin.supplier') || request()->routeIs('admin.pelanggan');
+                                $isSystemActive = request()->routeIs('admin.import') || request()->routeIs('admin.log') || request()->is('log-viewer*');
+                            @endphp
+
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" wire:navigate>
                                 <span class="inline-flex items-center gap-1.5">
                                     <x-heroicon-o-home class="w-4 h-4" />
                                     Dashboard
                                 </span>
                             </x-nav-link>
+
                             <x-nav-link :href="route('admin.obat')" :active="request()->routeIs('admin.obat')" wire:navigate>
                                 <span class="inline-flex items-center gap-1.5">
                                     <x-heroicon-o-beaker class="w-4 h-4" />
                                     Manajemen Obat
                                 </span>
                             </x-nav-link>
-                            @if(Route::has('admin.kategori'))
-                                <x-nav-link :href="route('admin.kategori')" :active="request()->routeIs('admin.kategori')" wire:navigate>
-                                    <span class="inline-flex items-center gap-1.5">
-                                        <x-heroicon-o-tag class="w-4 h-4" />
-                                        Kategori
-                                    </span>
-                                </x-nav-link>
-                            @endif
-                            <x-nav-link :href="route('admin.supplier')" :active="request()->routeIs('admin.supplier')" wire:navigate>
-                                <span class="inline-flex items-center gap-1.5">
-                                    <x-heroicon-o-truck class="w-4 h-4" />
-                                    Supplier
-                                </span>
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.pelanggan')" :active="request()->routeIs('admin.pelanggan')" wire:navigate>
-                                <span class="inline-flex items-center gap-1.5">
-                                    <x-heroicon-o-users class="w-4 h-4" />
-                                    Pelanggan
-                                </span>
-                            </x-nav-link>
+
+                            {{-- Dropdown Data Master --}}
+                            <div class="inline-flex items-center">
+                                <x-dropdown align="left" width="48">
+                                    <x-slot name="trigger">
+                                        <button class="inline-flex items-center h-16 px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none {{ $isMasterActive ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-black hover:border-black' }}">
+                                            <span class="inline-flex items-center gap-1">
+                                                <x-heroicon-o-folder class="w-4 h-4" />
+                                                Data Master
+                                                <x-heroicon-o-chevron-down class="w-3.5 h-3.5" />
+                                            </span>
+                                        </button>
+                                    </x-slot>
+                                    <x-slot name="content">
+                                        @if(Route::has('admin.kategori'))
+                                            <x-dropdown-link :href="route('admin.kategori')" :active="request()->routeIs('admin.kategori')" wire:navigate>
+                                                Kategori
+                                            </x-dropdown-link>
+                                        @endif
+                                        <x-dropdown-link :href="route('admin.supplier')" :active="request()->routeIs('admin.supplier')" wire:navigate>
+                                            Supplier
+                                        </x-dropdown-link>
+                                        <x-dropdown-link :href="route('admin.pelanggan')" :active="request()->routeIs('admin.pelanggan')" wire:navigate>
+                                            Pelanggan
+                                        </x-dropdown-link>
+                                    </x-slot>
+                                </x-dropdown>
+                            </div>
+
                             @if(Route::has('admin.transaksi'))
                                 <x-nav-link :href="route('admin.transaksi')" :active="request()->routeIs('admin.transaksi')" wire:navigate>
                                     <span class="inline-flex items-center gap-1.5">
@@ -87,24 +102,32 @@ new class extends Component {
                                     </span>
                                 </x-nav-link>
                             @endif
-                            <x-nav-link :href="route('admin.import')" :active="request()->routeIs('admin.import')" wire:navigate>
-                                <span class="inline-flex items-center gap-1.5">
-                                    <x-heroicon-o-document-arrow-up class="w-4 h-4" />
-                                    Import CSV
-                                </span>
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.log')" :active="request()->routeIs('admin.log')" wire:navigate>
-                                <span class="inline-flex items-center gap-1.5">
-                                    <x-heroicon-o-document-text class="w-4 h-4" />
-                                    Log
-                                </span>
-                            </x-nav-link>
-                            <x-nav-link href="/log-viewer" :active="request()->is('log-viewer*')">
-                                <span class="inline-flex items-center gap-1.5">
-                                    <x-heroicon-o-exclamation-triangle class="w-4 h-4" />
-                                    Error Dashboard
-                                </span>
-                            </x-nav-link>
+
+                            {{-- Dropdown Sistem & Log --}}
+                            <div class="inline-flex items-center">
+                                <x-dropdown align="left" width="48">
+                                    <x-slot name="trigger">
+                                        <button class="inline-flex items-center h-16 px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none {{ $isSystemActive ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-black hover:border-black' }}">
+                                            <span class="inline-flex items-center gap-1">
+                                                <x-heroicon-o-cog class="w-4 h-4" />
+                                                Sistem & Log
+                                                <x-heroicon-o-chevron-down class="w-3.5 h-3.5" />
+                                            </span>
+                                        </button>
+                                    </x-slot>
+                                    <x-slot name="content">
+                                        <x-dropdown-link :href="route('admin.import')" :active="request()->routeIs('admin.import')" wire:navigate>
+                                            Import CSV
+                                        </x-dropdown-link>
+                                        <x-dropdown-link :href="route('admin.log')" :active="request()->routeIs('admin.log')" wire:navigate>
+                                            Log Aktivitas
+                                        </x-dropdown-link>
+                                        <x-dropdown-link href="/log-viewer" :active="request()->is('log-viewer*')">
+                                            Error Dashboard
+                                        </x-dropdown-link>
+                                    </x-slot>
+                                </x-dropdown>
+                            </div>
                         @endif
 
                         {{-- Apoteker --}}
