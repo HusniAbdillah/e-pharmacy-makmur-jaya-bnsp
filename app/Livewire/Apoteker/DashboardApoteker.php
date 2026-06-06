@@ -25,6 +25,9 @@ class DashboardApoteker extends Component
 
         $transaksi->update(["status" => StatusTransaksi::MenungguPembayaran]);
 
+        // Dispatch Job FIFO asinkron setelah disetujui apoteker
+        \App\Jobs\ProcessBatchStockUpdate::dispatch($transaksi->id);
+
         // Log audit
         AuditLog::create([
             "user_id" => Auth::id(),

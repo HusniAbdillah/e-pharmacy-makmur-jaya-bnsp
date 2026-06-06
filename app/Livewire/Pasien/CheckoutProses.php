@@ -91,7 +91,7 @@ class CheckoutProses extends Component
                     "INV-" . now()->format("Ymd") . "-" . strtoupper(uniqid()),
                 "user_id" => Auth::id(),
                 "total_price" => $total,
-                "status" => StatusTransaksi::MenungguPembayaran,
+                "status" => $resepPath ? StatusTransaksi::MenungguVerifikasi : StatusTransaksi::MenungguPembayaran,
                 "is_online" => true,
                 "resep_path" => $resepPath,
             ]);
