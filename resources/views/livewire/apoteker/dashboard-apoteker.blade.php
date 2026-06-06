@@ -142,8 +142,17 @@
                                     </td>
                                     <td class="p-3 text-right">{{ $batch->current_stock }} unit</td>
                                     <td class="p-3 text-center">
-                                        <span class="px-2 py-1 bg-semantic-warning/10 text-semantic-warning text-xs rounded-sm">
-                                            {{ now()->diffInDays($batch->expiration_date) }} hari
+                                        <span class="px-2 py-1 bg-semantic-warning/10 text-semantic-warning text-xs rounded-sm whitespace-nowrap">
+                                            @php
+                                                $diff = now()->diff($batch->expiration_date);
+                                                $days = $diff->days;
+                                                $hours = $diff->h;
+                                            @endphp
+                                            @if($days > 0)
+                                                {{ $days }} hari {{ $hours }} jam
+                                            @else
+                                                {{ $hours }} jam
+                                            @endif
                                         </span>
                                     </td>
                                 </tr>
