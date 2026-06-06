@@ -23,7 +23,7 @@
             @endphp
 
             <!-- Navigation -->
-            <nav class="bg-white border-b border-oat sticky top-0 z-50">
+            <nav class="bg-white border-b border-oat sticky top-0" style="z-index: 1030;">
                 <div class="{{ $widthClass }} mx-auto px-4 sm:px-6 lg:px-8">
                     <livewire:layout.navigation />
                 </div>
